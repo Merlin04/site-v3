@@ -1,9 +1,35 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Content as About } from "../content/about.mdx";
+
+type TauonAPIResponse = {
+	status: number,
+	id: string,
+	position: number,
+	duration: number,
+	title: string,
+	artist: string
+};
+
+const TAUON_ENDPOINT = "http://radio.enby.land/llapi/poll";
+
+const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.json());
+
 ---
 
 <Layout title="b smith">
-	<main>
-		<h1>Hi</h1>
-	</main>
+	<div class="grid grid-cols-6 gap-5">
+		<div class="col-span-4 prose">
+			<About />
+		</div>
+		<div class="col-span-2 space-before-headings">
+			<h2 class="text-2">links</h2>
+			<ul class="text-accent list-disc pl-6">
+				<li><a href="https://github.com/Merlin04" class="link">github</a></li>
+				<li><a href="https://queer.party/@m04" class="link">fediverse</a></li>
+			</ul>
+			<h2 class="text-2">fun stuff</h2>
+			<span class="text-[0.875rem]">i'm currently listening to: <a href="http://radio.enby.land" class="link">{tauonData.artist} - {tauonData.title} (listen along!)</a></span>
+		</div>
+	</div>
 </Layout>

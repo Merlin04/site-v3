@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        @apply font-body bg-background text-text;
+    }
+
+    body {
+        @apply min-h-screen;
+    }
+}
