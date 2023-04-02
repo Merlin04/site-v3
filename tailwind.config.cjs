@@ -107,6 +107,33 @@ module.exports = {
 					"& h1:not(:first-child), h2:not(:first-child), h3:not(:first-child), h4:not(:first-child), h5:not(:first-child), h6:not(:first-child)": {
 						marginTop: "1rem"
 					}
+				},
+				".checkbox": {
+					// this is a checkbox that displays the status in ASCII text.
+					// it displays [ ] if not checked, and [x] if checked.
+					// I am going to implement it without any javascript, using psuedo elements.
+					// below is the implementation of the checkbox CSS:
+
+					// hide the checkbox
+					position: "absolute",
+					opacity: "0",
+					// make the checkbox focusable
+					"&:focus + label": {
+						outline: "2px solid " + theme("colors.primary")
+					},
+					// when the checkbox is checked, add a checkmark
+					"&:checked + label": {
+						"&::before": {
+							content: "'[x] '"
+						}
+					},
+					"& + label": {
+						userSelect: "none",
+						cursor: "pointer",
+						"&::before": {
+							content: "'[ ] '"
+						}
+					}
 				}
 			});
 		})
