@@ -45,3 +45,139 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 		</div>
 	</div>
 </Layout>
+
+<template id="fun-mode-template">
+	<style id="fun-mode-style">
+		:root {
+			/* --fun-color: #ff00ff; */
+			font-family: "Comic Sans MS", "Comic Sans", cursive;
+		}
+		.text-highlight {
+			/* background-color: var(--fun-color) !important; */
+			animation: bg-rotate 6s linear 0s infinite;
+		}
+		.text-highlight > * {
+			mix-blend-mode: plus-lighter;
+		}
+		.text-accent {
+			/* color: var(--fun-color) !important; */
+			animation: color-rotate 6s linear 0s infinite;
+		}
+		.link {
+			/* color: var(--fun-color) !important; */
+			animation: color-rotate 6s linear 0s infinite;
+		}
+		main > div * {
+			transition: transform 0.2s ease-in-out;
+		}
+		main > div *:hover {
+			transform: scale(1.1) rotate(4deg);
+		}
+
+		@keyframes color-rotate {
+			from {
+				color: #6666ff;
+			}
+			10% {
+				color: #0099ff;
+			}
+			50% {
+				color: #00ff00;
+			}
+			75% {
+				color: #ff3399;
+			}
+			100% {
+				color: #6666ff;
+			}
+		}
+
+		@keyframes bg-rotate {
+			from {
+				background-color: #6666ff;
+			}
+			10% {
+				background-color: #0099ff;
+			}
+			50% {
+				background-color: #00ff00;
+			}
+			75% {
+				background-color: #ff3399;
+			}
+			100% {
+				background-color: #6666ff;
+			}
+		}
+	</style>
+</template>
+
+<script>
+	// this is so overkill
+	const checkbox = document.getElementById("fun-mode") as HTMLInputElement;
+	const template = document.getElementById("fun-mode-template") as HTMLTemplateElement;
+	const tagReplace = (type: string, ...pairs: [string, string][]) => document.querySelectorAll(type).forEach(el => el.outerHTML = pairs.reduce((acc, cur) => acc.replaceAll(...cur), el.outerHTML));
+	const tagReplaceSet = ([from, to]: [string, string], ...pairs: [string, string][]) => [() => tagReplace(from, ...pairs), () => tagReplace(to, ...pairs.map<[string, string]>(([a, b]) => [b, a]))];
+	const mTRS = (from: string) => tagReplaceSet([from, "marquee"], [`<${from} `, `<marquee><${from} `], [`</${from}>`, `</${from}></marquee>`]);
+	const comb = (...from: string[]) => from.map(mTRS).reduce(([of, ot], [nf, nt]) => [() => (nf(), of()), () => (nt(), ot())]);
+	const [marqueeify, demarqueeify] = comb("h1", "h2");
+	let i: number;
+	checkbox.addEventListener("change", () => {
+		if (checkbox.checked) {
+			document.head.appendChild(template.content.cloneNode(true));
+			marqueeify();
+			// when the checkbox is checked, there should be a "random cursor" effect
+			// where the cursor for the body element changes randomly every second
+			// this is a list of all the possible cursors
+			const cursors = [
+				"auto",
+				"default",
+				"none",
+				"context-menu",
+				"help",
+				"pointer",
+				"progress",
+				"wait",
+				"cell",
+				"crosshair",
+				"text",
+				"vertical-text",
+				"alias",
+				"copy",
+				"move",
+				"no-drop",
+				"not-allowed",
+				"grab",
+				"grabbing",
+				"all-scroll",
+				"col-resize",
+				"row-resize",
+				"n-resize",
+				"e-resize",
+				"s-resize",
+				"w-resize",
+				"ne-resize",
+				"nw-resize",
+				"se-resize",
+				"sw-resize",
+				"ew-resize",
+				"ns-resize",
+				"nesw-resize",
+				"nwse-resize",
+				"zoom-in",
+				"zoom-out"
+			];
+			i = setInterval(() => {
+				// pick a random cursor from the list
+				const cursor = cursors[Math.floor(Math.random() * cursors.length)];
+				// set the cursor for the body element
+				document.body.style.cursor = cursor;
+			}, 1000);
+		} else {
+			document.head.removeChild(document.getElementById("fun-mode-style")!);
+			demarqueeify();
+			clearInterval(i);
+			document.body.style.cursor = "auto";
+		}
+	});
+</script>
