@@ -1,6 +1,7 @@
-import FastNoiseLite from "fastnoise-lite";
+import FastNoiseLite from "../../FastNoiseLite/JavaScript/FastNoiseLite";
 
 const noise = new FastNoiseLite();
+//@ts-expect-error - not sure what's happening here
 noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
 
 // simple script for a neat little shader-esque background
