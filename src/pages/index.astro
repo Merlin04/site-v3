@@ -23,12 +23,31 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 
 ---
 
+<script src="../components/shaderbg"></script>
+
 <Layout title="b smith">
 	<div class="grid grid-cols-6 gap-5">
-		<div class="col-span-4 prose">
+		<div class="col-span-6 sm:col-span-4 prose">
+			<div class="w-full flex justify-end mb-1">
+				<button class="links-btn text-accent text-0 sm:hidden underline italic text-right text-highlight bg-dark"><span>show links/fun</span></button>
+				<script>
+					const links = Array.from(document.querySelectorAll(".links-btn"));
+					const linksContent = document.getElementById("links-content");
+					links.forEach(l => l.addEventListener("click", () => {
+						linksContent.classList.toggle("open");
+					}));
+				</script>
+			</div>
 			<About />
 		</div>
-		<div class="col-span-2 space-before-headings">
+		<style>
+			@media(max-width: 40em) {
+				#links-content.open {
+					@apply block fixed right-0 w-[calc(100vw-2rem)] bg-dark p-4 rounded rounded-r-none shadow-lg;
+				}
+			}
+		</style>
+		<div id="links-content" class="col-span-2 space-before-headings hidden sm:block">
 			<h2 class="text-2">links</h2>
 			<ul class="text-accent list-disc pl-6">
 				<li><a href="https://github.com/Merlin04" class="link">github</a></li>
@@ -42,6 +61,9 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 			{tauonData.status === TauonAPIStatus.Playing && (
 				<span class="text-[0.875rem]">i'm currently listening to: <a href="https://radio.enby.land" class="link">{tauonData.artist} - {tauonData.title} (listen along!)</a></span>
 			)}
+			<button class="links-btn sm:hidden text-accent absolute right-2 top-2">
+				[x]
+			</button>
 		</div>
 	</div>
 </Layout>
@@ -173,11 +195,14 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 				// set the cursor for the body element
 				document.body.style.cursor = cursor;
 			}, 1000);
+			if(Math.random() < 0.1) alert("Fun mode may or may not have been enabled!");
 		} else {
 			document.head.removeChild(document.getElementById("fun-mode-style")!);
 			demarqueeify();
 			clearInterval(i);
 			document.body.style.cursor = "auto";
 		}
+
+		document.dispatchEvent(new CustomEvent("fun-mode", { detail: checkbox.checked }));
 	});
 </script>
