@@ -61,6 +61,67 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 			{tauonData.status === TauonAPIStatus.Playing && (
 				<span class="text-[0.875rem]">i'm currently listening to: <a href="https://radio.enby.land" class="link">{tauonData.artist} - {tauonData.title} (listen along!)</a></span>
 			)}
+			<div id="fun-mode-controls" class="hidden">
+				{/* color inputs */}
+				<div>
+					<label for="fun-start-color" class="text-accent">start color</label>
+					<input type="color" id="fun-start-color" class="h-6 w-8 rounded" />
+				</div>
+				<div>
+					<label for="fun-end-color" class="text-accent">end color</label>
+					<input type="color" id="fun-end-color" class="h-6 w-8 rounded" />
+				</div>
+				<div>
+					<label for="fun-speed" class="text-accent">speed</label>
+					<input type="range" id="fun-speed" min="0" max="5" step="0.05" value="1" />
+				</div>
+			</div>
+			<script>
+				import { addStateListener, patchState, getState } from "../components/state";
+				const funModeControls = document.getElementById("fun-mode-controls");
+				addStateListener(({ funMode }) => {
+					funModeControls.classList.toggle("fun", funMode);
+				}, ["funMode"]);
+
+				const funStartColor = document.getElementById("fun-start-color");
+				const funEndColor = document.getElementById("fun-end-color");
+
+				const toHex = (c: [number, number, number]) => "#" + c.map(n => n.toString(16).padStart(2, "0")).join("");
+				const fromHex = (c: string) => [...c.replaceAll("#", "").matchAll(/.{2}/g)].map(n => parseInt(n, 16));
+
+				// restore from state
+				const { shaderColors } = getState();
+				funStartColor.value = toHex(shaderColors[0]);
+				funEndColor.value = toHex(shaderColors[1]);
+
+				const updateShaderColors = () => {
+					patchState({
+						shaderColors: [
+							// rgb value arrays
+							fromHex(funStartColor.value),
+							fromHex(funEndColor.value)
+						]
+					});
+				};
+
+				[funStartColor, funEndColor].forEach(e => e.addEventListener("change", updateShaderColors));
+
+				const funSpeed = document.getElementById("fun-speed");
+
+				// restore from state
+				funSpeed.value = getState().animationSpeed.toString();
+
+				funSpeed.addEventListener("change", () => {
+					patchState({
+						animationSpeed: Number(funSpeed.value)
+					});
+				});
+			</script>
+			<style>
+				#fun-mode-controls.fun {
+					@apply block;
+				}
+			</style>
 			<button class="links-btn sm:hidden text-accent absolute right-2 top-2">
 				[x]
 			</button>
@@ -135,6 +196,8 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 </template>
 
 <script>
+	import { addStateListener, patchState } from "../components/state";
+
 	// this is so overkill
 	const checkbox = document.getElementById("fun-mode") as HTMLInputElement;
 	const template = document.getElementById("fun-mode-template") as HTMLTemplateElement;
@@ -145,7 +208,11 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 	const [marqueeify, demarqueeify] = comb("h1", "h2");
 	let i: number;
 	checkbox.addEventListener("change", () => {
-		if (checkbox.checked) {
+		patchState({ funMode: checkbox.checked });
+	});
+
+	addStateListener(({ funMode }) => {
+		if (funMode) {
 			document.head.appendChild(template.content.cloneNode(true));
 			marqueeify();
 			// when the checkbox is checked, there should be a "random cursor" effect
@@ -202,7 +269,5 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 			clearInterval(i);
 			document.body.style.cursor = "auto";
 		}
-
-		document.dispatchEvent(new CustomEvent("fun-mode", { detail: checkbox.checked }));
-	});
+	}, ["funMode"]);
 </script>

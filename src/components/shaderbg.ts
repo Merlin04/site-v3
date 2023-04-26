@@ -1,4 +1,5 @@
 import FastNoiseLite from "../../FastNoiseLite/JavaScript/FastNoiseLite";
+import { addStateListener, getState } from "./state";
 
 const noise = new FastNoiseLite();
 //@ts-expect-error - not sure what's happening here
@@ -95,15 +96,12 @@ const interpolateColorsGammaCorrected = (c1: number[], c2: number[]) => {
 const useGammaCorrection = false;
 const interpolateColors = useGammaCorrection ? interpolateColorsGammaCorrected : interpolateColorsLinear;
 
-const intNormal = interpolateColors([29, 29, 38], [44, 44, 59/*255,255,255*/]);
-const intFun = interpolateColors([0, 0, 0], [255, 0, 255]);
+const intNormal = interpolateColors([29, 29, 38], [44, 44, 59]);
+let interpolate = intNormal;
 
-let interpolate = interpolateColors([29, 29, 38], [44, 44, 59/*255,255,255*/]);
-
-document.addEventListener("fun-mode", e => {
-    const is = (e as CustomEvent).detail;
-    interpolate = is ? intFun : intNormal;
-});
+addStateListener(({ funMode, shaderColors }) => {
+    interpolate = funMode ? interpolateColors(...shaderColors) : intNormal;
+}, ["funMode", "shaderColors"]);
 
 // track mouse coords
 let mouseX = 0.5;
@@ -153,7 +151,8 @@ function render(shader: Shader, t: number) {
 
     ctx.putImageData(id, 0, 0);
     frame++;
-    requestAnimationFrame(t => render(shader, t / 1000));
+    const s = getState();
+    requestAnimationFrame(t => render(shader, t / 1000 * (s.funMode ? s.animationSpeed : 1)));
 };
 
 if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
