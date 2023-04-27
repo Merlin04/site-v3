@@ -1,4 +1,4 @@
-import { createState } from "./tahitiensis";
+import { createState } from "tahitiensis";
 
 export const [addStateListener, removeStateListener, patchState, getState] = createState({
     funMode: false,
