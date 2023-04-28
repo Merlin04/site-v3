@@ -1,4 +1,4 @@
-import FastNoiseLite from "../../FastNoiseLite/JavaScript/FastNoiseLite";
+import FastNoiseLite from "./FastNoiseLite";
 import { addStateListener, getState } from "./state";
 
 const noise = new FastNoiseLite();
