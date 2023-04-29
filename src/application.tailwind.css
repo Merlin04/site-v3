@@ -4,10 +4,26 @@
 
 @layer base {
     html {
-        @apply font-body bg-background text-text;
+        @apply font-body bg-dark text-text;
     }
 
     body {
         @apply min-h-screen;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply text-accent text-0 underline italic text-highlight bg-dark;
+    }
+    .date {
+        @apply block text-right bg-background rounded w-fit px-1 ml-auto text-[0.8rem];
+    }
+    .date-list li span.date:not(:last-child) {
+        @apply mb-1;
+    }
+    .date-list li:not(:last-child)::after {
+        content: "";
+        @apply block w-full h-[2px] bg-background rounded mt-1 mix-blend-color-dodge;
     }
 }

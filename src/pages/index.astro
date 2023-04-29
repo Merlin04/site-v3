@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Content as About } from "../content/about.mdx";
+import { Content as Sidebar } from "../content/sidebar.mdx";
 
 enum TauonAPIStatus {
 	Stopped = 0,
@@ -26,10 +27,10 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 <script src="../components/shaderbg"></script>
 
 <Layout title="b smith">
-	<div class="grid grid-cols-6 gap-5">
+	<div class="grid grid-cols-6 gap-5 pb-8">
 		<div class="col-span-6 sm:col-span-4 prose">
 			<div class="w-full flex justify-end mb-1">
-				<button class="links-btn text-accent text-0 sm:hidden underline italic text-right text-highlight bg-dark"><span>show links/fun</span></button>
+				<button class="links-btn btn sm:hidden text-right"><span>show links/work/fun</span></button>
 				<script>
 					const links = Array.from(document.querySelectorAll(".links-btn"));
 					const linksContent = document.getElementById("links-content");
@@ -47,16 +48,14 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 				}
 			}
 		</style>
-		<div id="links-content" class="col-span-2 space-before-headings hidden sm:block">
-			<h2 class="text-2">links</h2>
-			<ul class="text-accent list-disc pl-6">
-				<li><a href="https://github.com/Merlin04" class="link">github</a></li>
-				<li><a href="https://queer.party/@m04" class="link">fediverse</a></li>
-			</ul>
+		<div id="links-content" class="col-span-2 space-before-headings hidden sm:block max-h-[calc(100vh-2rem)] overflow-auto">
+			<div class="prose prose-headings:font-body prose-headings:mb-0 prose-li:m-0 prose-li:marker:text-accent prose-li:p-0 prose-ul:pl-6 prose-ul:m-0 prose-p:m-0 leading-[inherit]">
+				<Sidebar />
+			</div>
 			<h2 class="text-2">fun stuff</h2>
 			<div>
 				<input class="checkbox" type="checkbox" id="fun-mode" class="form-checkbox" />
-				<label for="fun-mode" class="text-accent">fun mode</label>
+				<label for="fun-mode" class="text-accent">fun mode!</label>
 			</div>
 			{tauonData.status === TauonAPIStatus.Playing && (
 				<span class="text-[0.875rem]">i'm currently listening to: <a href="https://radio.enby.land" class="link">{tauonData.artist} - {tauonData.title} (listen along!)</a></span>
@@ -71,6 +70,11 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 					<label for="fun-end-color" class="text-accent">end color</label>
 					<input type="color" id="fun-end-color" class="h-6 w-8 rounded" />
 				</div>
+				<button id="randomize-colors" class="btn">randomize colors</button>
+				<script>
+					import { emitRandomize } from "../components/state";
+					document.getElementById("randomize-colors").addEventListener("click", emitRandomize);
+				</script>
 				<div>
 					<label for="fun-speed" class="text-accent">speed</label>
 					<input type="range" id="fun-speed" min="0" max="5" step="0.05" value="1" />
@@ -106,6 +110,11 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 
 				[funStartColor, funEndColor].forEach(e => e.addEventListener("change", updateShaderColors));
 
+				addStateListener(({ shaderColors }) => {
+					funStartColor.value = toHex(shaderColors[0]);
+					funEndColor.value = toHex(shaderColors[1]);
+				}, ["shaderColors"]);
+
 				const funSpeed = document.getElementById("fun-speed");
 
 				// restore from state
@@ -132,29 +141,25 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 <template id="fun-mode-template">
 	<style id="fun-mode-style">
 		:root {
-			/* --fun-color: #ff00ff; */
 			font-family: "Comic Sans MS", "Comic Sans", cursive;
 		}
-		.text-highlight {
-			/* background-color: var(--fun-color) !important; */
+		.text-highlight, .btn {
 			animation: bg-rotate 6s linear 0s infinite;
 		}
-		.text-highlight > * {
+		.text-highlight, .btn > * {
 			mix-blend-mode: plus-lighter;
 		}
 		.text-accent {
-			/* color: var(--fun-color) !important; */
 			animation: color-rotate 6s linear 0s infinite;
 		}
 		.link {
-			/* color: var(--fun-color) !important; */
 			animation: color-rotate 6s linear 0s infinite;
 		}
 		main > div * {
 			transition: transform 0.2s ease-in-out;
 		}
-		main > div *:hover {
-			transform: scale(1.1) rotate(4deg);
+		.col-span-6 *:hover, main > div > *:hover {
+			transform: scale(1.05) /*rotate(4deg)*/ skew(4deg);
 		}
 
 		@keyframes color-rotate {

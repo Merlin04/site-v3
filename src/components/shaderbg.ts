@@ -1,5 +1,5 @@
 import FastNoiseLite from "./FastNoiseLite";
-import { addStateListener, getState } from "./state";
+import { addRandomizeListener, addStateListener, getState, patchState } from "./state";
 
 const noise = new FastNoiseLite();
 //@ts-expect-error - not sure what's happening here
@@ -96,7 +96,7 @@ const interpolateColorsGammaCorrected = (c1: number[], c2: number[]) => {
 const useGammaCorrection = false;
 const interpolateColors = useGammaCorrection ? interpolateColorsGammaCorrected : interpolateColorsLinear;
 
-const intNormal = interpolateColors([29, 29, 38], [44, 44, 59]);
+const intNormal = interpolateColors([29, 29, 38], /*[44, 44, 59]*/ /*[52, 52, 70]*/ [60, 60, 83] /*[69,69,95]*/);
 let interpolate = intNormal;
 
 addStateListener(({ funMode, shaderColors }) => {
