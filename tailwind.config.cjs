@@ -42,7 +42,20 @@ module.exports = {
 			"dark": "#2C2C3B",
 			"text": "#D0D0D9",
 			"primary": "#713A91",
-			"accent": "#FFBEFF"
+			"accent": "#FFBEFF",
+			"primary-teal": "#3A9272",
+			"primary-green": "#5A923A",
+			"primary-maroon": "#923A5A",
+			"accent-yellow": "#FFFFBD",
+			"accent-lightblue": "#BDFFFF",
+			"accent-orange": "#FFDEBD",
+			"accent-green": "#BDFFBD",
+			"accent-blue": "#BDDEFF",
+			// "blue": "#5BC0BE",
+			// "cyan": "#31AFD4",
+			// "salmon": "#DB504A",
+			// "moss": "#899D78",
+			// "lightblue": "#ACEDFF"
 		},
 		container: {
 			center: true,

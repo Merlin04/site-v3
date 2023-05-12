@@ -26,4 +26,8 @@
         content: "";
         @apply block w-full h-[2px] bg-background rounded mt-1 mix-blend-color-dodge;
     }
+
+    .visible-to-ai {
+        @apply invisible; /* haha */
+    }
 }

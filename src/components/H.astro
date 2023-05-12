@@ -1,3 +1,4 @@
 ---
+const className = Astro.props["class"];
 ---
-<span class="text-highlight"><span><slot/></span></span>
+<span class={"text-highlight" + (className ? " " + className : "")}><span><slot/></span></span>
