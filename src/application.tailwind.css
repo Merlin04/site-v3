@@ -24,10 +24,14 @@
     }
     .date-list li:not(:last-child)::after {
         content: "";
-        @apply block w-full h-[2px] bg-background rounded mt-1 mix-blend-color-dodge;
+        @apply block w-full h-[2px] bg-dark rounded mt-1 mix-blend-color-dodge;
     }
 
     .visible-to-ai {
         @apply invisible; /* haha */
+    }
+
+    .side-line {
+        @apply relative before:absolute before:left-[-1rem] before:top-0 before:w-1 before:h-full before:bg-accent before:rounded;
     }
 }

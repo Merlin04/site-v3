@@ -28,9 +28,9 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 
 <Layout title="b smith">
 	<div class="grid grid-cols-6 gap-5 pb-8">
-		<div class="col-span-6 sm:col-span-4 prose">
+		<div class="sm:hidden col-span-6 prose">
 			<div class="w-full flex justify-end mb-1">
-				<button class="links-btn btn sm:hidden text-right"><span>show links/work/fun</span></button>
+				<button class="links-btn btn text-right"><span>show links/work/fun</span></button>
 				<script>
 					const links = Array.from(document.querySelectorAll(".links-btn"));
 					const linksContent = document.getElementById("links-content");
@@ -39,6 +39,16 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 					}));
 				</script>
 			</div>
+		</div>
+		<div class="col-span-6 prose sm:prose-h1:text-4 side-line mb-4">
+			<h1>
+				hi, i'm b<span class="text-0"> </span><a class="text-accent text-0" href="https://en.pronouns.page/@_m04">(they/them)</a>
+			</h1>
+			<p>
+				I build things with computers.<sup><em><a class="text-accent-blue" href="#recent-projects">[jump to projects]</a></em></sup>
+			</p>
+		</div>
+		<div class="col-span-6 sm:col-span-4 prose">
 			<About />
 		</div>
 		<style>
@@ -143,18 +153,18 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 		:root {
 			font-family: "Comic Sans MS", "Comic Sans", cursive;
 		}
-		.text-highlight, .btn {
+		/* .text-highlight, .btn {
 			animation: bg-rotate 6s linear 0s infinite;
-		}
-		.text-highlight, .btn > * {
+		} */
+		/* .text-highlight, .btn > * {
 			mix-blend-mode: plus-lighter;
-		}
-		.text-accent {
+		} */
+		/* .text-accent {
 			animation: color-rotate 6s linear 0s infinite;
 		}
 		.link {
 			animation: color-rotate 6s linear 0s infinite;
-		}
+		} */
 		main > div * {
 			transition: transform 0.2s ease-in-out;
 		}
@@ -267,7 +277,7 @@ const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.
 				// set the cursor for the body element
 				document.body.style.cursor = cursor;
 			}, 1000);
-			if(Math.random() < 0.1) alert("Fun mode may or may not have been enabled!");
+			if(Math.random() < 0.1) alert("Fun mode may or may not have been enabled");
 		} else {
 			document.head.removeChild(document.getElementById("fun-mode-style")!);
 			demarqueeify();
