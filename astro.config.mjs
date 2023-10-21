@@ -9,7 +9,7 @@ import tailwind from "@astrojs/tailwind";
 // https://astro.build/config
 export default defineConfig({
   integrations: [/*react(), */image(), mdx(), tailwind({
-    config:  { applyBaseStyles: false }
+    config: { applyBaseStyles: false }
   })],
   output: "server",
   adapter: vercel()
