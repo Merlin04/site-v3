@@ -34,4 +34,9 @@
     .side-line {
         @apply relative before:absolute before:left-[-1rem] before:top-0 before:w-1 before:h-full before:bg-accent before:rounded;
     }
+
+    .nested-ul ul ul {
+        font-size: 0.9rem;
+        line-height: 1;
+    }
 }

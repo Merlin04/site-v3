@@ -1,0 +1,5 @@
+---
+const className = Astro.props["class"];
+import H from "./H.astro";
+---
+<H class={"bg-accent-blue text-background " + className}><slot /></H>
