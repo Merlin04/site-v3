@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="b31bb2d7-7d15-4323-bf11-b12df17ea72e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/content/about.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/about.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/content/sidebar.mdx" beforeDir="false" afterPath="$PROJECT_DIR$/src/content/sidebar.mdx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/index.astro" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.astro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +35,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
@@ -61,6 +66,9 @@
       <workItem from="1698080710985" duration="36000" />
       <workItem from="1701998021331" duration="3684000" />
       <workItem from="1702016666013" duration="22000" />
+      <workItem from="1702363862292" duration="445000" />
+      <workItem from="1702370800444" duration="7000" />
+      <workItem from="1726600978609" duration="440000" />
     </task>
     <servers />
   </component>
