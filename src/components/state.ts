@@ -33,8 +33,7 @@ const randomColorSet = () => {
 }
 
 export const [addStateListener, removeStateListener, patchState, getState] = createState({
-    funMode: false,
-    shaderColors: randomColorSet() as [[number, number, number], [number, number, number]],
+    shaderColors: [[29, 29, 38], [60, 60, 83]] as [[number, number, number], [number, number, number]],
     animationSpeed: 1
 });
 

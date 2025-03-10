@@ -1,296 +1,92 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Content as About } from "../content/about.mdx";
-import { Content as Sidebar } from "../content/sidebar.mdx";
-
-enum TauonAPIStatus {
-	Stopped = 0,
-	Playing = 1,
-	Paused = 2
-}
-
-type TauonAPIResponse = {
-	status: number,
-	id: string,
-	position: number,
-	duration: number,
-	title: string,
-	artist: string
-};
-
-const TAUON_ENDPOINT = /*"http://radio.enby.land/llapi/poll"*/ "https://radio.enby.land/tmb-proxy";
-
-const tauonData: TauonAPIResponse = await fetch(TAUON_ENDPOINT).then(res => res.json()).catch(_ => ({
-	status: TauonAPIStatus.Stopped
-}));
 
 ---
 
 <script src="../components/shaderbg"></script>
 
 <Layout title="b smith">
-	<div class="grid grid-cols-6 gap-5 pb-8">
-		<div class="sm:hidden col-span-6 prose">
-			<div class="w-full flex justify-end mb-1">
-				<button class="links-btn btn text-right"><span>show links/work/fun</span></button>
-				<script>
-					const links = Array.from(document.querySelectorAll(".links-btn"));
-					const linksContent = document.getElementById("links-content");
-					links.forEach(l => l.addEventListener("click", () => {
-						linksContent.classList.toggle("open");
-					}));
-				</script>
-			</div>
-		</div>
-		<div class="col-span-6 prose sm:prose-h1:text-4 side-line mb-4">
-			<h1>
-				hi, i'm b<span class="text-0"> </span><a class="text-accent text-0" href="https://pronouns.cc/@m04">(she/they)</a>
+	<div class="gap-5 pb-8">
+		<div class="prose sm:prose-h1:text-4 side-line mb-4">
+			<h1 class="mb-4">
+				hi, i'm b<span class="text-0"> </span><span class="text-accent text-0">(she/they)</span>
 			</h1>
-			<p>
-				I build things with computers.<sup><em><a class="text-accent-blue" href="#projects">[jump to projects]</a></em></sup>
-			</p>
+			<div class="flex gap-3 justify-end w-full">
+				<a href="#projects">[projects]</a>
+				<a href="https://github.com/Merlin04">[github]</a>
+				<a href="/resume.pdf">[resume]</a>
+			</div>
 		</div>
-		<div class="col-span-6 sm:col-span-4 prose">
+		<div class="prose">
 			<About />
-			<div id="webring-wrapper" class="flex items-center justify-center">
-				<a href="https://webring.hackclub.com/" id="previousBtn" class="webring-anchor" title="Previous">‹</a>
-				<a href="https://webring.hackclub.com/" class="webring-logo grayscale hover:grayscale-0 transition-[filter] duration-300" title="Hack Club Webring" alt="Hack Club Webring"></a>
-				<a href="https://webring.hackclub.com/" id="nextBtn" class="webring-anchor" title="Next">›</a>
-				<script src="https://webring.hackclub.com/public/embed.min.js"></script>
-			</div>		
-		</div>
-		<style>
-			@media(max-width: 40em) {
-				#links-content.open {
-					@apply block fixed right-0 w-[calc(100vw-2rem)] bg-dark p-4 rounded rounded-r-none shadow-lg;
-				}
-			}
-		</style>
-		<div id="links-content" class="col-span-2 space-before-headings hidden sm:block max-h-[calc(100vh-2rem)] overflow-auto">
-			<div class="prose prose-headings:font-body prose-headings:mb-0 prose-li:m-0 prose-li:marker:text-accent prose-li:p-0 prose-ul:pl-6 prose-ul:m-0 prose-p:m-0 leading-[inherit]">
-				<Sidebar />
-			</div>
-			<h2 class="text-2">fun stuff</h2>
-			<div>
-				<input class="checkbox" type="checkbox" id="fun-mode" class="form-checkbox" />
-				<label for="fun-mode" class="text-accent">fun mode!</label>
-			</div>
-			{tauonData.status === TauonAPIStatus.Playing && (
-				<span class="text-[0.875rem]">i'm currently listening to: <a href="https://radio.enby.land" class="link">{tauonData.artist} - {tauonData.title} (listen along!)</a></span>
-			)}
-			<div id="fun-mode-controls" class="hidden">
-				{/* color inputs */}
-				<div>
-					<label for="fun-start-color" class="text-accent">start color</label>
-					<input type="color" id="fun-start-color" class="h-6 w-8 rounded" />
+			<details>
+				<summary>background animation controls!</summary>
+				<div id="fun-mode-controls" class="bg-primary bg-opacity-40 p-2 rounded-md w-fit">
+					{/* color inputs */}
+					<div>
+						<label for="fun-start-color" class="text-accent">start color</label>
+						<input type="color" id="fun-start-color" class="h-6 w-8 rounded" />
+					</div>
+					<div>
+						<label for="fun-end-color" class="text-accent">end color</label>
+						<input type="color" id="fun-end-color" class="h-6 w-8 rounded" />
+					</div>
+					<button id="randomize-colors" class="btn">randomize colors</button>
+					<script>
+						import { emitRandomize } from "../components/state";
+						document.getElementById("randomize-colors")!.addEventListener("click", () => emitRandomize());
+					</script>
+					<div>
+						<label for="fun-speed" class="text-accent">speed</label>
+						<input type="range" id="fun-speed" min="0" max="5" step="0.05" value="1" />
+					</div>
 				</div>
-				<div>
-					<label for="fun-end-color" class="text-accent">end color</label>
-					<input type="color" id="fun-end-color" class="h-6 w-8 rounded" />
-				</div>
-				<button id="randomize-colors" class="btn">randomize colors</button>
-				<script>
-					import { emitRandomize } from "../components/state";
-					document.getElementById("randomize-colors").addEventListener("click", emitRandomize);
-				</script>
-				<div>
-					<label for="fun-speed" class="text-accent">speed</label>
-					<input type="range" id="fun-speed" min="0" max="5" step="0.05" value="1" />
-				</div>
-			</div>
-			<script>
-				import { addStateListener, patchState, getState } from "../components/state";
-				const funModeControls = document.getElementById("fun-mode-controls");
-				addStateListener(({ funMode }) => {
-					funModeControls.classList.toggle("fun", funMode);
-				}, ["funMode"]);
-
-				const funStartColor = document.getElementById("fun-start-color");
-				const funEndColor = document.getElementById("fun-end-color");
-
-				const toHex = (c: [number, number, number]) => "#" + c.map(n => n.toString(16).padStart(2, "0")).join("");
-				const fromHex = (c: string) => [...c.replaceAll("#", "").matchAll(/.{2}/g)].map(n => parseInt(n, 16));
-
-				// restore from state
-				const { shaderColors } = getState();
-				funStartColor.value = toHex(shaderColors[0]);
-				funEndColor.value = toHex(shaderColors[1]);
-
-				const updateShaderColors = () => {
-					patchState({
-						shaderColors: [
-							// rgb value arrays
-							fromHex(funStartColor.value),
-							fromHex(funEndColor.value)
-						]
-					});
-				};
-
-				[funStartColor, funEndColor].forEach(e => e.addEventListener("change", updateShaderColors));
-
-				addStateListener(({ shaderColors }) => {
-					funStartColor.value = toHex(shaderColors[0]);
-					funEndColor.value = toHex(shaderColors[1]);
-				}, ["shaderColors"]);
-
-				const funSpeed = document.getElementById("fun-speed");
-
-				// restore from state
-				funSpeed.value = getState().animationSpeed.toString();
-
-				funSpeed.addEventListener("change", () => {
-					patchState({
-						animationSpeed: Number(funSpeed.value)
-					});
-				});
-			</script>
-			<style>
-				#fun-mode-controls.fun {
-					@apply block;
-				}
-			</style>
-			<button class="links-btn sm:hidden text-accent absolute right-2 top-2">
-				[x]
-			</button>
+	
+			</details>
 		</div>
 	</div>
 </Layout>
 
-<template id="fun-mode-template">
-	<style id="fun-mode-style">
-		:root {
-			font-family: "Comic Sans MS", "Comic Sans", cursive;
-		}
-		/* .text-highlight, .btn {
-			animation: bg-rotate 6s linear 0s infinite;
-		} */
-		/* .text-highlight, .btn > * {
-			mix-blend-mode: plus-lighter;
-		} */
-		/* .text-accent {
-			animation: color-rotate 6s linear 0s infinite;
-		}
-		.link {
-			animation: color-rotate 6s linear 0s infinite;
-		} */
-		main > div * {
-			transition: transform 0.2s ease-in-out;
-		}
-		.col-span-6 *:hover, main > div > *:hover {
-			transform: scale(1.05) /*rotate(4deg)*/ skew(4deg);
-		}
-
-		@keyframes color-rotate {
-			from {
-				color: #6666ff;
-			}
-			10% {
-				color: #0099ff;
-			}
-			50% {
-				color: #00ff00;
-			}
-			75% {
-				color: #ff3399;
-			}
-			100% {
-				color: #6666ff;
-			}
-		}
-
-		@keyframes bg-rotate {
-			from {
-				background-color: #6666ff;
-			}
-			10% {
-				background-color: #0099ff;
-			}
-			50% {
-				background-color: #00ff00;
-			}
-			75% {
-				background-color: #ff3399;
-			}
-			100% {
-				background-color: #6666ff;
-			}
-		}
-	</style>
-</template>
-
 <script>
-	import { addStateListener, patchState } from "../components/state";
+	import { addStateListener, patchState, getState } from "../components/state";
 
-	// this is so overkill
-	const checkbox = document.getElementById("fun-mode") as HTMLInputElement;
-	const template = document.getElementById("fun-mode-template") as HTMLTemplateElement;
-	const tagReplace = (type: string, ...pairs: [string, string][]) => document.querySelectorAll(type).forEach(el => el.outerHTML = pairs.reduce((acc, cur) => acc.replaceAll(...cur), el.outerHTML));
-	const tagReplaceSet = ([from, to]: [string, string], ...pairs: [string, string][]) => [() => tagReplace(from, ...pairs), () => tagReplace(to, ...pairs.map<[string, string]>(([a, b]) => [b, a]))];
-	const mTRS = (from: string) => tagReplaceSet([from, "marquee"], [`<${from} `, `<marquee><${from} `], [`</${from}>`, `</${from}></marquee>`]);
-	const comb = (...from: string[]) => from.map(mTRS).reduce(([of, ot], [nf, nt]) => [() => (nf(), of()), () => (nt(), ot())]);
-	const [marqueeify, demarqueeify] = comb("h1", "h2");
-	let i: number;
-	checkbox.addEventListener("change", () => {
-		patchState({ funMode: checkbox.checked });
+	const funStartColor = document.getElementById("fun-start-color") as HTMLInputElement;
+	const funEndColor = document.getElementById("fun-end-color") as HTMLInputElement;
+
+	const toHex = (c: [number, number, number]) => "#" + c.map(n => n.toString(16).padStart(2, "0")).join("");
+	const fromHex = (c: string) => [...c.replaceAll("#", "").matchAll(/.{2}/g)].map(n => parseInt(n as any, 16)) as [number, number, number];
+
+	// restore from state
+	const { shaderColors } = getState();
+	funStartColor.value = toHex(shaderColors[0]);
+	funEndColor.value = toHex(shaderColors[1]);
+
+	const updateShaderColors = () => {
+		patchState({
+			shaderColors: [
+				// rgb value arrays
+				fromHex(funStartColor.value),
+				fromHex(funEndColor.value)
+			]
+		});
+	};
+
+	[funStartColor, funEndColor].forEach(e => e.addEventListener("change", updateShaderColors));
+
+	addStateListener(({ shaderColors }) => {
+		funStartColor.value = toHex(shaderColors[0]);
+		funEndColor.value = toHex(shaderColors[1]);
+	}, ["shaderColors"]);
+
+	const funSpeed = document.getElementById("fun-speed") as HTMLInputElement;
+
+	// restore from state
+	funSpeed.value = getState().animationSpeed.toString();
+
+	funSpeed.addEventListener("change", () => {
+		patchState({
+			animationSpeed: Number(funSpeed.value)
+		});
 	});
-
-	addStateListener(({ funMode }) => {
-		if (funMode) {
-			document.head.appendChild(template.content.cloneNode(true));
-			marqueeify();
-			// when the checkbox is checked, there should be a "random cursor" effect
-			// where the cursor for the body element changes randomly every second
-			// this is a list of all the possible cursors
-			const cursors = [
-				"auto",
-				"default",
-				"none",
-				"context-menu",
-				"help",
-				"pointer",
-				"progress",
-				"wait",
-				"cell",
-				"crosshair",
-				"text",
-				"vertical-text",
-				"alias",
-				"copy",
-				"move",
-				"no-drop",
-				"not-allowed",
-				"grab",
-				"grabbing",
-				"all-scroll",
-				"col-resize",
-				"row-resize",
-				"n-resize",
-				"e-resize",
-				"s-resize",
-				"w-resize",
-				"ne-resize",
-				"nw-resize",
-				"se-resize",
-				"sw-resize",
-				"ew-resize",
-				"ns-resize",
-				"nesw-resize",
-				"nwse-resize",
-				"zoom-in",
-				"zoom-out"
-			];
-			i = setInterval(() => {
-				// pick a random cursor from the list
-				const cursor = cursors[Math.floor(Math.random() * cursors.length)];
-				// set the cursor for the body element
-				document.body.style.cursor = cursor;
-			}, 1000);
-			if(Math.random() < 0.1) alert("Fun mode may or may not have been enabled");
-		} else {
-			document.head.removeChild(document.getElementById("fun-mode-style")!);
-			demarqueeify();
-			clearInterval(i);
-			document.body.style.cursor = "auto";
-		}
-	}, ["funMode"]);
 </script>

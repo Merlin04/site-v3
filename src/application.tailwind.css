@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: "Kosugi Maru";
+    src: url("/KosugiMaruModded-Regular.ttf");
+}
+
 @layer base {
     html {
         @apply font-body bg-dark text-text;
@@ -38,5 +43,12 @@
     .nested-ul ul ul {
         font-size: 0.9rem;
         line-height: 1;
+    }
+
+    .prose {
+        max-width: unset;
+    }
+    .prose hr {
+        @apply border-text border-opacity-30;
     }
 }

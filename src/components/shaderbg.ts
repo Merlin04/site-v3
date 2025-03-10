@@ -1,5 +1,5 @@
 import FastNoiseLite from "./FastNoiseLite";
-import { addRandomizeListener, addStateListener, getState, patchState } from "./state";
+import { addStateListener, getState } from "./state";
 
 const noise = new FastNoiseLite();
 //@ts-expect-error - not sure what's happening here
@@ -9,28 +9,6 @@ noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
 // shader function
 
 type Shader = (x: number, y: number, mouseX: number, mouseY: number, realX: number, realY: number, frame: number, t: number) => number; // result is number between 0 and 1
-
-/*const shader: Shader = (x, y, mouseX, mouseY, t) => {
-    const cx = x - mouseX;
-    const cy = y - mouseY;
-    const r = Math.sqrt(cx * cx + cy * cy);
-    return Math.cos(Math.sqrt(r * 10) + (t / 5)) * 0.5 + 0.5;
-};*/
-// hmmm actually let's try something completely different with maybe a bit of noise?
-// const shader: Shader = (x, y, mouseX, mouseY, t) => {
-//     const cx = x - mouseX;
-//     const cy = y - mouseY;
-//     const r = Math.sqrt(cx * cx + cy * cy);
-//     const a = Math.atan2(cy, cx);
-//     const v = Math.sin(r * 10 + t * 2) * 0.5 + 0.5;
-//     const n = Math.sin(a * 10 + t * 2) * 0.5 + 0.5;
-//     const p = Math.sin(v * 10 + n * 2) * 0.5 + 0.5;
-
-//     // apply noise
-//     return (p + noise.GetNoise(x, y, t) * 0.5) * 0.5 + 0.5;
-// };
-
-// const shader: Shader = (x, y, mouseX, mouseY, t) => Math.sin(x*(x+mouseX));
 
 // this function combines two values within the ranges 0-1 with associated weights
 const mix = (a: number, b: number, w: number) => a * (1 - w) + b * w;
@@ -54,26 +32,12 @@ document.body.appendChild(canvas);
 
 const ctx = canvas.getContext("2d")!;
 
-const memoize = <T extends (...args: any[]) => any>(f: T, k: (...args: Parameters<T>) => string | number | symbol) => {
-    const cache = new Map<string | number | symbol, ReturnType<T>>();
-    return (...args: Parameters<T>): ReturnType<T> => {
-        const key = k(...args);
-        if (cache.has(key)) {
-            return cache.get(key)!;
-        } else {
-            const v = f(...args);
-            cache.set(key, v);
-            return v;
-        }
-    };
-};
-
-const interpolateColorsLinear = (c1: number[], c2: number[]) => /*memoize(*/(t: number) => {
+const interpolateColorsLinear = (c1: number[], c2: number[]) => (t: number) => {
     const r = c1[0] * (1 - t) + c2[0] * t;
     const g = c1[1] * (1 - t) + c2[1] * t;
     const b = c1[2] * (1 - t) + c2[2] * t;
     return [r, g, b];
-};//, t => t); // yeah I guess this is good enough
+}; // yeah I guess this is good enough
 
 const interpolateColorsGammaCorrected = (c1: number[], c2: number[]) => {
     // Convert the RGB values to floats between 0 and 1
@@ -96,12 +60,11 @@ const interpolateColorsGammaCorrected = (c1: number[], c2: number[]) => {
 const useGammaCorrection = false;
 const interpolateColors = useGammaCorrection ? interpolateColorsGammaCorrected : interpolateColorsLinear;
 
-const intNormal = interpolateColors([29, 29, 38], /*[44, 44, 59]*/ /*[52, 52, 70]*/ [60, 60, 83] /*[69,69,95]*/);
-let interpolate = intNormal;
+let interpolate = interpolateColors(...getState().shaderColors);
 
-addStateListener(({ funMode, shaderColors }) => {
-    interpolate = funMode ? interpolateColors(...shaderColors) : intNormal;
-}, ["funMode", "shaderColors"]);
+addStateListener(({ shaderColors }) => {
+    interpolate = interpolateColors(...shaderColors);
+}, ["shaderColors"]);
 
 // track mouse coords
 let mouseX = 0.5;
@@ -152,7 +115,7 @@ function render(shader: Shader, t: number) {
     ctx.putImageData(id, 0, 0);
     frame++;
     const s = getState();
-    requestAnimationFrame(t => render(shader, t / 1000 * (s.funMode ? s.animationSpeed : 1)));
+    requestAnimationFrame(t => render(shader, t / 1000 * s.animationSpeed));
 };
 
 if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {

@@ -1,6 +1,8 @@
 const plugin = require("tailwindcss/plugin");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
+const font = "Kosugi Maru, Helvetica, sans-serif";
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
@@ -12,9 +14,9 @@ module.exports = {
 			"xl": "100em"
 		},
 		fontFamily: {
-			body: "JetBrains Mono, monospace",
-			heading: "JetBrains Mono, monospace", // todo: play around with this
-			monospace: "JetBrains Mono, monospace"
+			body: font,
+			heading: font,
+			monospace: font
 		},
 		fontSize: {
 			"0": 16,
@@ -32,7 +34,7 @@ module.exports = {
 		fontWeight: {
 			body: 400,
 			heading: 700,
-			bold: 500
+			bold: 600
 		},
 		letterSpacing: {
 			body: "normal"
